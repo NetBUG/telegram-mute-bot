@@ -1,0 +1,11 @@
+# Telethon session
+*.session
+*.session-journal
+
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
