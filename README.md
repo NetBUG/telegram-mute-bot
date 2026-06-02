@@ -1,10 +1,19 @@
 # Telegram Abridger Userbot
 
+[English version](README_en.md)
+
 ## Requirements
 
 - Python 3.10+
 - `telethon`
-- Telegram API credentials (`API_ID`, `API_HASH`) — получить на https://my.telegram.org
+- Telegram API credentials (`API_ID`, `API_HASH`)
+
+### Получение API_ID и API_HASH
+
+1. Открыть https://my.telegram.org и войти по номеру телефона
+2. Перейти в **API development tools**
+3. Создать приложение (название и платформа — любые)
+4. Скопировать `App api_id` → `API_ID` и `App api_hash` → `API_HASH`
 
 ### Config (env vars or `.env`)
 
