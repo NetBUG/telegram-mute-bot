@@ -288,11 +288,12 @@ async def test_on_message_ignores_empty_text():
     client.send_read_acknowledge.assert_not_awaited()
 
 
-async def test_on_message_accumulates_and_acks():
+async def test_on_message_accumulates_no_early_ack():
+    # Messages are counted but read-receipt is deferred until summary is sent.
     bot, _clock, client = make_bot(message_frequency_limit=5)
     bot._active_chats.add(1)
     await bot.on_message(make_event(1, 9, "hi"))
-    client.send_read_acknowledge.assert_awaited_once()
+    client.send_read_acknowledge.assert_not_awaited()
     assert bot._buffer[(1, 9)] == ["hi"]
     client.send_message.assert_not_awaited()
 
@@ -303,6 +304,7 @@ async def test_on_message_flood_flushes_and_mutes():
     for text in ("a", "b", "c"):
         await bot.on_message(make_event(1, 9, text))
     client.send_message.assert_awaited_once_with(1, "a, b, c", silent=True)
+    client.send_read_acknowledge.assert_awaited_once_with(1)
     assert bot.is_muted(9) is True
     assert (1, 9) not in bot._buffer
 

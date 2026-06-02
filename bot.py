@@ -186,6 +186,7 @@ class Abridger:
         if self.replied_recently(chat_id):
             log.info("skipped summary for chat=%d (active conversation)", chat_id)
             return
+        await self._client.send_read_acknowledge(chat_id)
         body = self._config.message_concat_string.join(texts)
         if self._config.summary_prefix:
             body = _format_prefix(self._config.summary_prefix, len(texts)) + body
@@ -243,7 +244,6 @@ class Abridger:
             return
 
         over_limit = self.register_message(chat_id, sender_id, text)
-        await self._client.send_read_acknowledge(chat_id, event.message)
 
         if over_limit:
             for chat, texts in self.take_sender_buffers(sender_id):
