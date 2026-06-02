@@ -28,6 +28,7 @@ COOLDOWN_INTERVAL = int(os.getenv("COOLDOWN_INTERVAL", "300"))       # seconds
 MESSAGE_FREQUENCY_LIMIT = int(os.getenv("MESSAGE_FREQUENCY_LIMIT", "5"))
 MESSAGE_CONCAT_STRING = os.getenv("MESSAGE_CONCAT_STRING", ", ")
 MUTE_TIMEOUT = int(os.getenv("MUTE_TIMEOUT", "3600"))  # seconds
+SUMMARY_PREFIX = os.getenv("SUMMARY_PREFIX", "")
 
 client = TelegramClient("userbot", API_ID, API_HASH)
 
@@ -59,7 +60,10 @@ async def send_buffer(chat_id: int, sender_id: int) -> None:
     texts = buffer.pop((chat_id, sender_id), [])
     if not texts:
         return
-    await client.send_message(chat_id, MESSAGE_CONCAT_STRING.join(texts), silent=True)
+    body = MESSAGE_CONCAT_STRING.join(texts)
+    if SUMMARY_PREFIX:
+        body = (SUMMARY_PREFIX % len(texts)) + body
+    await client.send_message(chat_id, body, silent=True)
     log.info("sent %d msgs from sender=%d in chat=%d", len(texts), sender_id, chat_id)
 
 

@@ -23,6 +23,7 @@
 | `MESSAGE_FREQUENCY_LIMIT` | `5` | Max messages per window before muting |
 | `MESSAGE_CONCAT_STRING` | `, ` | Delimiter used to join buffered messages |
 | `MUTE_TIMEOUT` | `3600` | Mute duration in seconds |
+| `SUMMARY_PREFIX` | _(none)_ | Optional prefix prepended to the reply; `%d` is replaced with the message count (e.g. `"I've put together your %d messages:\n"`) |
 
 ## Usage
 
@@ -41,7 +42,7 @@ The userbot monitors incoming messages from non-muted, non-archived chats (forum
 
 - Incoming messages are marked as read and added to a per-sender buffer
 - If a sender exceeds `MESSAGE_FREQUENCY_LIMIT` messages within the window, they are muted for `MUTE_TIMEOUT` seconds via Telegram's notification settings
-- Buffered messages are concatenated with `MESSAGE_CONCAT_STRING` and sent silently in the same chat
+- Buffered messages are concatenated with `MESSAGE_CONCAT_STRING` and sent silently in the same chat; if `SUMMARY_PREFIX` is set, it is prepended to the reply (`%d` → message count)
 - Buffers are also flushed periodically once a sender's window expires
 
 ## Output / Result Files
