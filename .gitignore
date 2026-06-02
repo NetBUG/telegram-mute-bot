@@ -1,11 +1,18 @@
-# Telethon session
+# Telethon session files (contain auth secrets — never commit)
 *.session
 *.session-journal
 
-# Environment
+# Local environment
 .env
 
 # Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+.venv/
+
+# Tooling caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
