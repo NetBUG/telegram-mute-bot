@@ -44,6 +44,7 @@ The userbot monitors incoming messages from non-muted, non-archived chats (forum
 - If a sender exceeds `MESSAGE_FREQUENCY_LIMIT` messages within the window, they are muted for `MUTE_TIMEOUT` seconds via Telegram's notification settings
 - Buffered messages are concatenated with `MESSAGE_CONCAT_STRING` and sent silently in the same chat; if `SUMMARY_PREFIX` is set, it is prepended to the reply (`%d` → message count)
 - Buffers are also flushed periodically once a sender's window expires
+- If the user sent any messages in the same chat within `COOLDOWN_INTERVAL`, the summary is suppressed — the conversation is already active
 
 ## Output / Result Files
 
