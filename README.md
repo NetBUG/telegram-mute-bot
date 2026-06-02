@@ -1,6 +1,6 @@
 # Telegram Abridger Userbot
 
-**English** · [中文](README.zh-CN.md) · [Русский](README.ru.md)
+**English** · [Русский](README.ru.md)
 
 A self-account (MTProto) userbot that watches incoming messages, buffers them per sender over a sliding window, and—when a sender floods the window—joins the buffered messages into one silent summary and mutes the sender's notifications. If you reply in the chat yourself, the summary is suppressed: the conversation is clearly active.
 
