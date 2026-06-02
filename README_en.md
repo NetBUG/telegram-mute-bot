@@ -22,6 +22,7 @@
 | `COOLDOWN_INTERVAL` | `300` | Observation window in seconds |
 | `MESSAGE_FREQUENCY_LIMIT` | `5` | Max messages per window before muting |
 | `MESSAGE_CONCAT_STRING` | `, ` | Delimiter used to join buffered messages |
+| `MUTE_TIMEOUT` | `3600` | Mute duration in seconds |
 
 ## Usage
 
@@ -39,7 +40,7 @@ On first run, Telethon will prompt for your phone number and confirmation code.
 The userbot monitors incoming messages from non-muted, non-archived chats (forum/topics chats are excluded). For each sender it maintains a sliding window of `COOLDOWN_INTERVAL` seconds:
 
 - Incoming messages are marked as read and added to a per-sender buffer
-- If a sender exceeds `MESSAGE_FREQUENCY_LIMIT` messages within the window, they are muted for 1 hour via Telegram's notification settings
+- If a sender exceeds `MESSAGE_FREQUENCY_LIMIT` messages within the window, they are muted for `MUTE_TIMEOUT` seconds via Telegram's notification settings
 - Buffered messages are concatenated with `MESSAGE_CONCAT_STRING` and sent silently in the same chat
 - Buffers are also flushed periodically once a sender's window expires
 

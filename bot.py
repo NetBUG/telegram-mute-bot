@@ -27,7 +27,7 @@ API_HASH = os.environ["API_HASH"]
 COOLDOWN_INTERVAL = int(os.getenv("COOLDOWN_INTERVAL", "300"))       # seconds
 MESSAGE_FREQUENCY_LIMIT = int(os.getenv("MESSAGE_FREQUENCY_LIMIT", "5"))
 MESSAGE_CONCAT_STRING = os.getenv("MESSAGE_CONCAT_STRING", ", ")
-MUTE_DURATION = 3600  # 1 hour
+MUTE_TIMEOUT = int(os.getenv("MUTE_TIMEOUT", "3600"))  # seconds
 
 client = TelegramClient("userbot", API_ID, API_HASH)
 
@@ -81,7 +81,7 @@ async def refresh_active_chats() -> None:
 
 
 async def mute_peer(sender_id: int) -> None:
-    until_ts = int((datetime.now(timezone.utc) + timedelta(seconds=MUTE_DURATION)).timestamp())
+    until_ts = int((datetime.now(timezone.utc) + timedelta(seconds=MUTE_TIMEOUT)).timestamp())
     try:
         entity = await client.get_input_entity(sender_id)
         await client(
@@ -91,7 +91,7 @@ async def mute_peer(sender_id: int) -> None:
             )
         )
         muted_until[sender_id] = float(until_ts)
-        log.info("muted sender=%d for %ds", sender_id, MUTE_DURATION)
+        log.info("muted sender=%d for %ds", sender_id, MUTE_TIMEOUT)
     except Exception:
         log.exception("failed to mute sender=%d", sender_id)
 
