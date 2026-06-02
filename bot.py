@@ -40,6 +40,8 @@ buffer: dict[tuple[int, int], list[str]] = defaultdict(list)
 muted_until: dict[int, float] = {}
 # chat IDs that are not archived and not user-muted
 active_chats: set[int] = set()
+# chat_id -> deque of my own outgoing message timestamps
+outgoing_timestamps: dict[int, deque] = defaultdict(deque)
 
 
 def is_muted(sender_id: int) -> bool:
@@ -48,6 +50,12 @@ def is_muted(sender_id: int) -> bool:
         return True
     muted_until.pop(sender_id, None)
     return False
+
+
+def i_replied_recently(chat_id: int) -> bool:
+    dq = outgoing_timestamps[chat_id]
+    trim_window(dq)
+    return bool(dq)
 
 
 def trim_window(dq: deque) -> None:
@@ -59,6 +67,9 @@ def trim_window(dq: deque) -> None:
 async def send_buffer(chat_id: int, sender_id: int) -> None:
     texts = buffer.pop((chat_id, sender_id), [])
     if not texts:
+        return
+    if i_replied_recently(chat_id):
+        log.info("skipped summary for chat=%d sender=%d (active conversation)", chat_id, sender_id)
         return
     body = MESSAGE_CONCAT_STRING.join(texts)
     if SUMMARY_PREFIX:
@@ -98,6 +109,12 @@ async def mute_peer(sender_id: int) -> None:
         log.info("muted sender=%d for %ds", sender_id, MUTE_TIMEOUT)
     except Exception:
         log.exception("failed to mute sender=%d", sender_id)
+
+
+@client.on(events.NewMessage(outgoing=True))
+async def on_outgoing(event: events.NewMessage.Event) -> None:
+    if event.chat_id:
+        outgoing_timestamps[event.chat_id].append(time.time())
 
 
 @client.on(events.NewMessage(incoming=True))
